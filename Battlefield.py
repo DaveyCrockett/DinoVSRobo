@@ -31,13 +31,15 @@ class Battlefield:
 
     def battle(self):
         print('Battle will commence.')
-        self.show_dino_opponent()
-        self.show_robo_opponent()
-        while self.dino_turn(self.pick_dino, self.pick_robo) > 0 and self.robo_turn(self.pick_dino, self.pick_robo) > 0:
-            print(self.pick_robo.name + ' health is now ' + str(self.pick_robo.health))
-            print(self.pick_robo.name + ' power level is now ' + str(self.pick_robo.power_level))
-            print(self.pick_dino.type + ' health is now ' + str(self.pick_dino.health))
-            print(self.pick_dino.type + ' energy is now ' + str(self.pick_dino.energy))
+        for i in self.robo_list:
+            self.show_robo_opponent(i)
+            for j in self.dino_list:
+                self.show_dino_opponent(j)
+                while self.dino_turn(j, i) > 0 and self.robo_turn(j, i) > 0:
+                    print(i.name + ' health is now ' + str(i.health))
+                    print(i.name + ' power level is now ' + str(i.power_level))
+                    print(j.type + ' health is now ' + str(j.health))
+                    print(j.type + ' energy is now ' + str(j.energy))
 
         self.display_winners(self.pick_dino, self.pick_robo)
 
@@ -59,12 +61,12 @@ class Battlefield:
         robo.power_level = robo.power_level - 10
         return strike_robo
 
-    def show_dino_opponent(self):
-        print('Dinosaurs choice is: ' + self.pick_dino.type)
+    def show_dino_opponent(self, dino_pick):
+        print('Dinosaurs choice is: ' + dino_pick.type)
 
 
-    def show_robo_opponent(self):
-        print('Robots choice is: ' + self.pick_robo.name)
+    def show_robo_opponent(self, robo_pick):
+        print('Robots choice is: ' + robo_pick.name)
 
 
     def display_winners(self, dino, robo):
