@@ -1,7 +1,7 @@
 from Fleet import Fleet
 from Herd import Herd
 import random
-
+from collections import Counter
 
 class Battlefield:
     def __init__(self):
@@ -31,16 +31,24 @@ class Battlefield:
 
     def battle(self):
         print('Battle will commence.')
-        for i in self.robo_list:
-            self.show_robo_opponent(i)
-            for j in self.dino_list:
-                self.show_dino_opponent(j)
-                while self.dino_turn(j, i) > 0 and self.robo_turn(j, i) > 0:
-                    print(i.name + ' health is now ' + str(i.health))
-                    print(i.name + ' power level is now ' + str(i.power_level))
-                    print(j.type + ' health is now ' + str(j.health))
-                    print(j.type + ' energy is now ' + str(j.energy))
-                    self.display_winners(j, i)
+        robo_wins = []
+        dino_wins = []
+        limit = range(len(self.robo_list))
+        for i in limit:
+            robo_opponent = self.show_robo_opponent(self.robo_list, i)
+            dino_opponent = self.show_dino_opponent(self.dino_list, i)
+            while self.dino_turn(dino_opponent, robo_opponent) > 0 and self.robo_turn(dino_opponent, robo_opponent) > 0:
+                print(robo_opponent.name + ' health is now ' + str(robo_opponent.health))
+                print(robo_opponent.name + ' power level is now ' + str(robo_opponent.power_level))
+                print(dino_opponent.type + ' health is now ' + str(dino_opponent.health))
+                print(dino_opponent.type + ' energy is now ' + str(dino_opponent.energy))
+            if dino_opponent.health > robo_opponent.health:
+                print(dino_opponent.type + ' is the winner!')
+                robo_wins.append(dino_opponent)
+            elif robo_opponent.health > dino_opponent.health:
+                print(robo_opponent.name + ' is the winner!')
+                dino_wins.append(robo_opponent)
+        self.display_winners(robo_wins, dino_wins)
 
     def dino_turn(self, dino, robo):
         robo.weapon = random.choice(self.weapon_list)
@@ -60,16 +68,20 @@ class Battlefield:
         robo.power_level = robo.power_level - 10
         return strike_robo
 
-    def show_dino_opponent(self, dino_pick):
+    def show_dino_opponent(self, dino_list, i):
+        dino_pick = dino_list[i]
         print('Dinosaurs choice is: ' + dino_pick.type)
+        return dino_pick
 
-
-    def show_robo_opponent(self, robo_pick):
+    def show_robo_opponent(self, robo_list, i):
+        robo_pick = robo_list[i]
         print('Robots choice is: ' + robo_pick.name)
+        return robo_pick
 
-
-    def display_winners(self, dino, robo):
-        if dino.health > robo.health:
-            print(dino.type + ' is the winner!')
-        elif robo.health > dino.health:
-            print(robo.name + ' is the winner!')
+    def display_winners(self, robo, dino):
+        robo_count = len(robo)
+        dino_count = len(dino)
+        if robo_count > dino_count:
+            print("The Fleet wins the battle!")
+        elif dino_count > robo_count:
+            print("The Herd wins the battle!")
