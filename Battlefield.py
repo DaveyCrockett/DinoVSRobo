@@ -1,7 +1,6 @@
 from Fleet import Fleet
 from Herd import Herd
 import random
-from collections import Counter
 
 class Battlefield:
     def __init__(self):
